@@ -10,7 +10,7 @@ IDE Used: Visual Studio Code
 
 using namespace std;
 
-const int STREAM_IGNORE_CHARS = 100;
+const int STREAM_IGNORE_CHARS = 100; //Number of characters ignored by istream.ignore()
 
 class Movie {
     public:

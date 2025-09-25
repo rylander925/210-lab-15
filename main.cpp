@@ -3,12 +3,6 @@ COMSC-210 | Lab 15 | Rylan Der
 IDE Used: Visual Studio Code
 */
 
-/*
-Code a Movie class that has:
- the screen writer, the year released, and the title as its private member variables. It has the standard setters and getters for each private member variable. 
-Also code a print() method which prints the object data in a simple format.
-*/
-
 #include <vector>
 #include <string>
 #include <iostream>
@@ -28,7 +22,9 @@ class Movie {
         int getYear() const           { return year; }
         string getTitle() const       { return title; }
 
-        //print movie info
+        /**
+         * Outputs movie data to console
+         */
         void print() const;
 
     private:
@@ -37,23 +33,32 @@ class Movie {
         string title;
 };
 
-void InputMovies(vector<Movie>& movies, string filename);
-
-int main() {
-    
-}
-
-void Movie::print() const {
-    cout << "Movie: " << title << endl;
-    cout << "\tYear: " << year << endl;
-    cout << "\tScreen writer: " << writer << endl;
-}
-
 /**
  * Retrieve movie data from file into a vector of movies 
  * @param movies Vector to input data to
  * @param filename File to retrieve movie data from
  */
+void InputMovies(vector<Movie>& movies, string filename);
+
+int main() {
+    const string FILENAME = "data.txt";
+    vector<Movie> movies;
+
+    InputMovies(movies, FILENAME);
+
+    //Output data
+    for (Movie movie : movies) {
+        movie.print();
+        cout << endl;
+    }
+}
+
+void Movie::print() const {
+    cout << "Movie: " << title << endl;
+    cout << " > Year: " << year << endl;
+    cout << " > Screen writer: " << writer << endl;
+}
+
 void InputMovies(vector<Movie>& movies, string filename) {
     ifstream infile;
     string title;
@@ -61,24 +66,31 @@ void InputMovies(vector<Movie>& movies, string filename) {
     int year;
     Movie newMovie;
 
+    //Verify file opens properly
     infile.open(filename);
     if (!infile.good()) {
         cout << "ERROR: Could not open file \"" << filename << "\"" << endl;
         throw ios_base::failure("Invalid file name"); 
     }
 
+    //Input data from file
     if (infile.good()) {
+        //Retrieve file data; FORMAT:
+        //Movie title
+        //Year
+        //Screen writer
         while(getline(infile, title)) {
-            getline(infile, writer);
             infile >> year;
+            infile.ignore(STREAM_IGNORE_CHARS, '\n');
+            getline(infile, writer);
 
+            //Put data into a temporary movie object
             newMovie.setTitle(title);
             newMovie.setWriter(writer);
             newMovie.setYear(year);
 
+            //Push movie to vector
             movies.push_back(newMovie);
-
-            infile.ignore(STREAM_IGNORE_CHARS, '\n');
         }
     }
 }
